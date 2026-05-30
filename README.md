@@ -145,18 +145,28 @@ configure the following options:
 * disable **Save only a single front image as separate file**
 * disable **Always use the primary image type as the file name**
 
-For cover art providers, leave the default sources enabled:
+For cover art providers:
 
-* Cover Art Archive (Release)
-* Allowed Cover Art URLs
-* Cover Art Archive (Release Group)
-* Local Files
+* leave **Cover Art Archive (Release)** enabled
+* leave **Allowed Cover Art URLs** enabled
+* leave **Cover Art Archive (Release Group)** enabled
+* enable **Local Files**
 
-This configuration provides excellent compatibility across players, media servers, and mobile applications.
+Then open:
+
+Cover Art → Cover Art Archive
+
+and set:
+
+Only use images of the following size: Full size
+
+This configuration provides excellent compatibility across players, media servers, and mobile applications while preserving the highest-quality artwork available from the source.
 
 The reasoning behind these choices will be discussed in greater detail in the chapter dedicated specifically to artwork management.
 
 [![Cover Art settings](images/02-cover-art.png)](images/02-cover-art.png)
+
+[![Cover Art Archive settings](images/03-cover-art-archive.png)](images/03-cover-art-archive.png)
 
 ## File Naming and Library Structure
 
@@ -194,6 +204,8 @@ When Picard saves files with these settings enabled, it moves them into the dest
 
 For this reason, many users maintain a temporary "incoming" directory containing newly acquired music and use Picard to move completed releases into the main library.
 
+[![File Naming settings](images/04-file-naming.png)](images/04-file-naming.png)
+
 Select:
 
 Edit file naming script...
@@ -211,6 +223,8 @@ The result is a library that remains predictable and easy to browse even when it
 Users interested in advanced naming rules can consult the official Picard scripting documentation:
 
 https://picard-docs.musicbrainz.org/en/latest/config/options_filerenaming_editor.html
+
+[![File Naming Script Editor settings](images/05-file-naming-script-editor.png)](images/05-file-naming-script-editor.png)
 
 ## Installing the ReplayGain Plugin
 
@@ -234,7 +248,7 @@ ReplayGain 2.0
 
 will appear in the settings menu.
 
-[![Plugins](images/04-plugins.png)](images/04-plugins.png)
+[![Plugins](images/06-plugins.png)](images/06-plugins.png)
 
 Before continuing, install the external utility rsgain.
 
@@ -258,7 +272,7 @@ These values provide a practical balance between consistency and listening comfo
 
 ReplayGain standards, loudness targets, clipping protection, and alternative configurations will be discussed in detail later in this guide.
 
-[![ReplayGain 2.0 settings](images/05-replaygain.png)](images/05-replaygain.png)
+[![ReplayGain 2.0 settings](images/07-replaygain.png)](images/07-replaygain.png)
 
 ## Additional Plugins
 
