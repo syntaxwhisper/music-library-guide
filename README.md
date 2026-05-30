@@ -7,6 +7,12 @@
 
 A practical guide to building, organizing, tagging, backing up, and preserving a personal music library.
 
+## Contents
+
+- [Introduction](#introduction)
+- [Chapter 1 – The Philosophy: Metadata First](#chapter-1--the-philosophy-metadata-first)
+- [Chapter 2 – Configuring MusicBrainz Picard](#chapter-2--configuring-musicbrainz-picard)
+
 # Introduction
 
 Music libraries have never been easier to build and never harder to maintain.
