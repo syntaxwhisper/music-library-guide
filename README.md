@@ -117,11 +117,11 @@ configure the following options:
 
 With these settings, Picard will only assign genres that have broad consensus within the MusicBrainz database and will limit each release to a single primary genre.
 
+[![Genre Metadata settings](images/01-metadata-genres.png)](images/01-metadata-genres.png)
+
 This produces cleaner and more predictable results than allowing multiple overlapping genres or community-created folksonomy tags.
 
 The exact values are ultimately a matter of personal preference, but maintaining consistency across the entire collection is more important than choosing any particular genre strategy.
-
-[![Genre Metadata settings](images/01-metadata-genres.png)](images/01-metadata-genres.png)
 
 ## Cover Art Settings
 
@@ -152,6 +152,8 @@ For cover art providers:
 * leave **Cover Art Archive (Release Group)** enabled
 * enable **Local Files**
 
+[![Cover Art settings](images/02-cover-art.png)](images/02-cover-art.png)
+
 Then open:
 
 Cover Art → Cover Art Archive
@@ -160,13 +162,11 @@ and set:
 
 Only use images of the following size: Full size
 
+[![Cover Art Archive settings](images/03-cover-art-archive.png)](images/03-cover-art-archive.png)
+
 This configuration provides excellent compatibility across players, media servers, and mobile applications while preserving the highest-quality artwork available from the source.
 
 The reasoning behind these choices will be discussed in greater detail in the chapter dedicated specifically to artwork management.
-
-[![Cover Art settings](images/02-cover-art.png)](images/02-cover-art.png)
-
-[![Cover Art Archive settings](images/03-cover-art-archive.png)](images/03-cover-art-archive.png)
 
 ## File Naming and Library Structure
 
@@ -192,9 +192,9 @@ File Naming
 
 and enable:
 
-* Move files when saving
-* Delete empty directories
-* Rename files when saving
+* **Move files when saving**
+* **Delete empty directories**
+* **Rename files when saving**
 
 Then choose the destination directory that will contain your music library.
 
@@ -220,11 +220,11 @@ This script automatically creates artist folders, album folders prefixed with th
 
 The result is a library that remains predictable and easy to browse even when it grows to tens of thousands of tracks.
 
+[![File Naming Script Editor settings](images/05-file-naming-script-editor.png)](images/05-file-naming-script-editor.png)
+
 Users interested in advanced naming rules can consult the official Picard scripting documentation:
 
 https://picard-docs.musicbrainz.org/en/latest/config/options_filerenaming_editor.html
-
-[![File Naming Script Editor settings](images/05-file-naming-script-editor.png)](images/05-file-naming-script-editor.png)
 
 ## Installing the ReplayGain Plugin
 
@@ -270,9 +270,9 @@ After installation, configure ReplayGain as follows:
 
 These values provide a practical balance between consistency and listening comfort.
 
-ReplayGain standards, loudness targets, clipping protection, and alternative configurations will be discussed in detail later in this guide.
-
 [![ReplayGain 2.0 settings](images/07-replaygain.png)](images/07-replaygain.png)
+
+ReplayGain standards, loudness targets, clipping protection, and alternative configurations will be discussed in detail later in this guide.
 
 ## Additional Plugins
 
