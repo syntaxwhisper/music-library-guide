@@ -1,3 +1,12 @@
+# The Practical Guide to Managing a Music Library
+
+![Status](https://img.shields.io/badge/status-active-success)
+![Music Library](https://img.shields.io/badge/topic-music%20library-blue)
+![Self Hosted](https://img.shields.io/badge/self--hosted-friendly-orange)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+A practical guide to building, organizing, tagging, backing up, and preserving a personal music library.
+
 # Introduction
 
 Music libraries have never been easier to build and never harder to maintain.
