@@ -12,6 +12,8 @@ A practical guide to building, organizing, tagging, backing up, and preserving a
 - [Introduction](#introduction)
 - [Chapter 1 – The Philosophy: Metadata First](#chapter-1--the-philosophy-metadata-first)
 - [Chapter 2 – Configuring MusicBrainz Picard](#chapter-2--configuring-musicbrainz-picard)
+- [Chapter 3 – Common Mistakes That Break a Music Library](#chapter-3--common-mistakes-that-break-a-music-library)
+- [Chapter 4 – ReplayGain](#chapter-4--replaygain)
 
 # Introduction
 
