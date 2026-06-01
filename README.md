@@ -31,7 +31,8 @@ The goal is simple: transform a folder full of audio files into a collection tha
 
 The workflow described here is based on widely adopted tools and standards, with a particular focus on [MusicBrainz Picard](https://picard.musicbrainz.org/), ReplayGain, [Navidrome](https://www.navidrome.org/), and self-hosted music management. However, most of the concepts apply equally well regardless of the software you choose.
 
-This guide is a work in progress. The chapters currently available cover the core workflow: metadata philosophy, Picard configuration, common mistakes, and ReplayGain. Additional chapters on artwork management, lyrics, backup strategies, and long-term archival practices are in preparation and will be added in subsequent revisions.
+> [!NOTE]
+> This guide is actively maintained. Chapters on artwork management, lyrics, backup strategies, and archival practices are in preparation and will be added in subsequent revisions.
 
 Before discussing software, folder structures, or streaming servers, it is important to understand a fundamental concept:
 
@@ -62,8 +63,6 @@ A clean music library rests on four fundamental pillars:
 * proper ReplayGain information
 * predictable file and folder naming
 
-Notice that folder structure comes last.
-
 Folders are important, but they should be generated from metadata rather than maintained manually. Once metadata is accurate and consistent, tools such as MusicBrainz Picard can automatically create a logical and predictable directory structure.
 
 This approach has several advantages:
@@ -79,8 +78,6 @@ When users encounter problems such as albums appearing multiple times in Navidro
 For that reason, every step described in the following chapters begins with the same principle:
 
 fix the metadata first.
-
-Everything else comes afterwards.
 
 # Chapter 2 – Configuring MusicBrainz Picard
 
@@ -208,11 +205,8 @@ and enable:
 
 Then choose the destination directory that will contain your music library.
 
-Important:
-
-When Picard saves files with these settings enabled, it moves them into the destination library. The audio itself is not modified, but the files will no longer remain in their original location.
-
-For this reason, many users maintain a temporary "incoming" directory containing newly acquired music and use Picard to move completed releases into the main library.
+> [!WARNING]
+> When **Move files when saving** is enabled, Picard moves files into the destination library. Files will no longer remain in their original location after saving. For this reason, many users maintain a separate **incoming** directory for newly acquired music and use Picard to move completed releases into the main library.
 
 ![File Naming settings](images/04-file-naming.png)
 
@@ -228,15 +222,16 @@ $if(%albumartist%,%albumartist%,%artist%)/$if(%originalyear%,%originalyear%,$lef
 
 ![File Naming Script Editor for single disk settings](images/05-file-naming-script-editor-single-disk.png)
 
-This script contains three layers of logic, each handling a potential inconsistency in the source metadata.
+This script contains three layers of logic, each handling a potential
+inconsistency in the source metadata.
 
-**Root folder**: album artist with fallback to track artist. The script uses `%albumartist%` rather than `%artist%` as the root folder. This ensures that albums featuring collaborations or guest artists (where the track-level `%artist%` field may differ from track to track) are always grouped under a single consistent directory. If `%albumartist%` is not populated, the script falls back to `%artist%`.
+| Component | Logic |
+|---|---|
+| **Root folder** | Uses `%albumartist%` rather than `%artist%`, so albums with guest artists or collaborations always group under a single consistent directory. Falls back to `%artist%` if `%albumartist%` is not populated. |
+| **Album folder** | Prefixed with `%originalyear%`, which records when a work was first published rather than when a specific edition was released. Falls back to the first four characters of `%date%`, which is populated far more consistently in MusicBrainz. Without this fallback, albums missing both fields would generate folder names beginning with a bare dash. |
+| **Track filename** | `$num(%tracknumber%,2)` pads the track number to two digits, ensuring correct sort order in any file manager or application that uses alphabetical ordering. |
 
-**Album folder**: original year with fallback to release date. The album folder is prefixed with `%originalyear%`, which records when a work was first published rather than when a specific edition was released. This keeps reissues, remasters, and anniversary editions sorted by the date that matters most for browsing. Because this field is not always present in MusicBrainz (particularly for less well-documented releases) the script falls back to the first four characters of `%date%`, which is populated far more consistently. Without this fallback, albums missing both fields would generate folder names beginning with a bare dash.
-
-**Track filename**: zero-padded track number followed by title. `$num(%tracknumber%,2)` pads the track number to two digits, ensuring that files sort correctly in any file manager or application that uses alphabetical ordering.
-
-Before saving an album, it is worth confirming in Picard that at least one date field is present. If both `%originalyear%` and `%date%` are empty, the album folder will be named ` - Album Title`, which is visually awkward and may cause sorting issues. In that case, the date can be entered manually before saving.
+Before saving an album, confirm in Picard that at least one date field is present. If both `%originalyear%` and `%date%` are empty, the album folder will be named ` - Album Title`, which is visually awkward and may cause sorting issues. In that case, enter the date manually before saving.
 
 Users interested in advanced naming rules can consult the official Picard scripting documentation:
 
@@ -301,7 +296,7 @@ Both approaches are valid. The important thing is to choose one and apply it con
 
 ReplayGain deserves its own chapter because it has a significant impact on listening experience.
 
-For now, the goal is simply to configure Picard so that ReplayGain information can be calculated automatically during the tagging process.
+For now, the goal here is simply to configure Picard so that ReplayGain can be calculated as part of the normal tagging workflow.
 
 Open:
 
@@ -339,23 +334,15 @@ After installation, configure ReplayGain as follows:
 * set **Opus Files** to "Write standard ReplayGain tags"
 * leave **Always reference Opus R128_*_GAIN tags to -23 LUFS** disabled
 
-These values provide a practical balance between consistency and listening comfort.
-
 ![ReplayGain 2.0 settings](images/07-replaygain.png)
 
-ReplayGain standards, loudness targets, clipping protection, and alternative configurations will be discussed in detail later in this guide.
+These values provide a practical balance between consistency and listening comfort.
 
-## Additional Plugins
+ReplayGain standards, loudness targets, clipping protection, and alternative configurations are discussed in detail in Chapter 4.
 
-Picard supports a large collection of optional plugins that extend its functionality.
-
-A complete list is available at:
-
-https://picard.musicbrainz.org/plugins/
-
-Most users can begin with the default installation and ReplayGain plugin alone. Additional plugins can be added later as specific needs arise.
-
-At this stage, the objective is simply to establish a clean, reliable, and repeatable tagging workflow.
+> [!NOTE]
+> Picard supports a large collection of optional plugins that extend its functionality. A complete list is available at: https://picard.musicbrainz.org/plugins/
+> Most users can begin with the default installation and the ReplayGain plugin alone. Additional plugins can be added later as specific needs arise.
 
 # Chapter 3 – Common Mistakes That Break a Music Library
 
@@ -442,7 +429,8 @@ This ensures that all tracks share the same release metadata.
 
 After adding or replacing tracks, remember to recalculate ReplayGain for the entire album before saving.
 
-Once all tracks belong to the same release, the duplicate album problem usually disappears immediately after the music server refreshes its library.
+> [!TIP]
+> In Navidrome, a manual rescan can be triggered from **Administration → Scan Library**. This is useful after fixing metadata to see the corrected results immediately without waiting for the next scheduled scan.
 
 ## Consistency Matters More Than Perfection
 
@@ -492,11 +480,7 @@ and
 
 MusicBrainz generally handles these situations well, but differences still appear from time to time.
 
-The important thing is not which style you choose.
-
-The important thing is choosing one approach and using it consistently throughout the collection.
-
-A consistent library is easier to browse, search, and maintain.
+Which style you choose matters less than applying it consistently throughout the collection.
 
 ## Essential Metadata Fields
 
@@ -638,18 +622,9 @@ If you remove the ReplayGain tags, the audio files return to behaving exactly as
 
 ReplayGain is often misunderstood.
 
-It does not:
+It does not re-encode audio, modify waveforms, or permanently alter volume levels. It stores playback instructions, nothing more.
 
-* re-encode audio
-* compress dynamic range
-* change audio quality
-* modify waveforms
-* permanently increase or decrease volume
-* rewrite the audio stream
-
-ReplayGain only stores instructions for compatible players.
-
-Because of this, it can safely be applied multiple times without degrading audio quality.
+Because of this, it can safely be applied multiple times without any effect on audio quality, and the tags can be removed at any time to restore the original behaviour.
 
 ## ReplayGain vs Destructive Normalization
 
@@ -693,6 +668,9 @@ For FLAC files, ReplayGain information is usually stored in tags similar to the 
 | REPLAYGAIN_ALBUM_GAIN         | -5.45 dB      | Adjustment applied when playing the album as a whole |
 | REPLAYGAIN_ALBUM_PEAK         | 0.922110      | Highest peak found anywhere in the album             |
 | REPLAYGAIN_REFERENCE_LOUDNESS | -18.00 LUFS   | Loudness target used during scanning                 |
+
+> [!NOTE]
+> Peak values are expressed as a ratio relative to the maximum digital level, where 1.0 represents full scale (0 dBFS). A value of 0.943211 means the loudest sample reaches approximately 94% of the maximum possible level.
 
 The player reads these values and decides how much volume adjustment should be applied during playback.
 
@@ -791,35 +769,29 @@ One of the first questions users encounter is:
 
 > "What loudness target should I use?"
 
-There is no universally correct answer.
+There is no universally correct answer, but understanding how the standard evolved makes the available options easier to evaluate.
 
-Different standards use different reference levels, and the history of ReplayGain itself adds some additional context worth understanding.
-
-## A Brief History
+### A Brief History
 
 The original ReplayGain standard, published in 2001, used a target of approximately 89 dB SPL, which corresponds roughly to -14 LUFS when measured with modern loudness metering tools. This value was chosen to match the perceived loudness of a typical well-recorded album of the time.
 
-ReplayGain 2.0, introduced later and based on the EBU R128 loudness measurement algorithm, shifted the reference target to -18 LUFS. This change brought ReplayGain in line with modern broadcast loudness standards and made the measurements more consistent across different types of music.
+ReplayGain 2.0, introduced later and based on the EBU R128 loudness measurement algorithm, shifted the reference target to -18 LUFS. This change aligned ReplayGain with modern broadcast loudness standards and improved consistency across genres.
 
-If your library already contains ReplayGain tags written by older software (or if you encounter files with gain values that seem unexpectedly large or small) the difference between these two targets is likely the cause. Rescanning the library with a consistent target resolves the issue.
+If your library already contains ReplayGain tags written by older software, or if you encounter files with gain values that seem unexpectedly large or small, the difference between these two targets is likely the cause. Rescanning the library with a consistent target resolves the issue.
 
-### -23 LUFS
+### Available Targets
 
-The EBU R128 broadcast standard uses -23 LUFS. This is an excellent choice for television and radio broadcasting but tends to sound unnecessarily quiet in a personal music library.
+**-23 LUFS** The EBU R128 broadcast standard. An excellent choice for television and radio, but tends to sound unnecessarily quiet in a personal music library.
 
-### -18 LUFS
+**-18 LUFS** The ReplayGain 2.0 reference target. This has become the practical standard for many self-hosted music collections and is the value used throughout this guide.
 
-ReplayGain 2.0 defines -18 LUFS as its reference target. This has become the practical standard for many self-hosted music collections and is the value used throughout this guide.
-
-### -16 LUFS
-
-Apple Music targets approximately -16 LUFS. Many listeners consider this a good compromise between loudness and headroom, particularly for modern recordings.
+**-16 LUFS** The target used by Apple Music. Many listeners consider this a good compromise between loudness and headroom, particularly for modern recordings.
 
 ### Why This Guide Uses -18 LUFS
 
-The settings recommended in this guide use -18 LUFS because it represents a balanced middle ground. It aligns with the ReplayGain 2.0 specification and works well across mixed collections containing both older and newer recordings.
+-18 LUFS represents a balanced middle ground. It aligns with the ReplayGain 2.0 specification and works well across mixed collections containing both older and newer recordings.
 
-Users should feel free to experiment. One of ReplayGain's greatest advantages is that the library can always be rescanned later with a different target without affecting the audio files in any way.
+One of ReplayGain's greatest advantages is that the library can always be rescanned later with a different target without affecting the audio files in any way.
 
 ## Why Reference Loudness Tags Are Disabled
 
@@ -891,22 +863,9 @@ This is another reason why the chapter on common mistakes recommends always load
 
 ## Changing Your Mind Later
 
-One of ReplayGain's greatest advantages is flexibility.
+ReplayGain tags are never permanent. If you decide to change the loudness target, clipping settings, or any other parameter, simply rescan.
 
-Nothing is permanent.
-
-If you decide that:
-
-* the target loudness is too low
-* the target loudness is too high
-* different clipping protection settings would work better
-* you prefer another ReplayGain strategy
-
-you can simply recalculate the tags.
-
-For a single album, loading it into Picard and running ReplayGain again is usually sufficient.
-
-For an entire library, rsgain provides a faster solution.
+For a single album, loading it into Picard and running the ReplayGain calculation again is sufficient. For an entire library, rsgain is the faster solution: see the next section.
 
 ## Reprocessing an Entire Library with rsgain
 
@@ -945,6 +904,7 @@ ID3v2Version=keep
 OpusMode=d
 PreserveMtimes=false
 ```
+
 One setting in the preset deserves particular attention: `OpusMode=d`.
 
 In rsgain, `OpusMode=d` uses the default behaviour for Opus files, which writes R128 tags (`R128_TRACK_GAIN` and `R128_ALBUM_GAIN`) rather than standard ReplayGain tags. This is consistent with the Opus specification, which defines its own gain mechanism distinct from the ReplayGain standard.
