@@ -938,3 +938,561 @@ The most important concept is simple:
 ReplayGain does not change your music.
 
 It changes how compatible players choose to play it.
+
+# Chapter 5 – Cover Art
+
+Album artwork is often treated as an afterthought.
+
+In practice, it is one of the most visible parts of a music library.
+
+Whether you browse your collection through Navidrome, Jellyfin, Foobar2000, MusicBee, a mobile application, or a car infotainment system, artwork is usually the first thing you see.
+
+For this reason, it is worth spending a little time establishing a consistent approach from the beginning.
+
+## A Practical Strategy
+
+There is no single "correct" way to manage album artwork.
+
+Some users store artwork only inside audio files.
+
+Others keep separate image files and avoid embedding artwork entirely.
+
+This guide uses a more conservative approach:
+
+* artwork embedded in audio files
+* artwork saved separately as `cover.jpg`
+
+This is not the only possible strategy, but it offers an excellent balance between compatibility, portability, and long-term maintainability.
+
+Embedding artwork ensures that tracks remain self-contained and portable.
+
+Keeping a separate `cover.jpg` file improves compatibility with many music servers, players, and library management tools.
+
+If one method fails, the other is usually still available.
+
+## Embedded Artwork vs Separate Files
+
+Both approaches have advantages.
+
+### Embedded Artwork
+
+Advantages:
+
+* travels with the audio file
+* works well when sharing tracks individually
+* supported by most modern players
+* ideal for portable devices
+
+Disadvantages:
+
+* increases file size
+* requires rewriting the file when changing artwork
+
+### Separate Artwork Files
+
+Advantages:
+
+* easy to replace
+* easy to inspect manually
+* used by many music servers and media managers
+
+Disadvantages:
+
+* can become separated from the music files
+* not all players automatically detect them
+
+Using both approaches simultaneously largely eliminates the weaknesses of each method.
+
+## Recommended Image Size
+
+One of the most common questions concerns artwork resolution.
+
+There is no universal standard.
+
+In practice, artwork available online varies enormously.
+
+You may encounter:
+
+* 600×600 images
+* 1000×1000 images
+* 1200×1200 images
+* 3000×3000 images
+* Even larger scans
+
+This guide recommends aiming for:
+
+```text
+At least 1200×1200 pixels
+```
+
+This size provides excellent results on modern devices while remaining manageable.
+
+Artwork around 1200×1200:
+
+* looks good on modern monitors
+* looks good on phones and tablets
+* is supported virtually everywhere
+* avoids many compatibility issues sometimes encountered with extremely large images
+
+In practice, artwork between 1200×1200 and 3000×3000 pixels covers the vast majority of use cases. Images larger than 3000×3000 rarely provide visible improvements and may slow down scanning or cause display issues in some applications.
+
+For older releases, especially obscure or historical recordings, obtaining artwork of this quality may not always be possible.
+
+That is perfectly acceptable.
+
+A complete library with slightly inconsistent artwork is generally preferable to an incomplete library built around chasing perfect images.
+
+## Square Images Matter
+
+Album artwork should ideally be square.
+
+While many players handle non-square images correctly, others may display unwanted borders, stretching, or unusual cropping.
+
+Fortunately, correcting this is easy.
+
+If an image is not square, a simple crop using common image editing tools is usually sufficient.
+
+Examples include:
+
+* Microsoft Photos on Windows
+* Loupe on Ubuntu
+* virtually any image editor
+
+A quick crop performed once will avoid visual inconsistencies throughout the entire library.
+
+> [!NOTE]
+> In rare cases, artwork for certain releases (particularly older singles, gatefold covers, or digipak formats) may be intentionally non-square. Before cropping, it is worth verifying that the original artwork is not simply a wider scan of a legitimately rectangular package.
+
+## Image Size vs File Size
+
+Resolution is not the only factor worth considering.
+
+File size matters too.
+
+Large artwork files can:
+
+* increase library size unnecessarily
+* slow scanning and indexing
+* consume additional bandwidth when streaming
+* cause compatibility issues with some devices and software
+
+For this reason, this guide uses a simple rule:
+
+```text
+Keep artwork below roughly 6 MB whenever practical.
+```
+
+This is not a technical requirement.
+
+It is simply a reasonable threshold that helps prevent oversized files from accumulating throughout the library.
+
+## JPEG or PNG?
+
+For album artwork, JPEG is usually the better choice.
+
+Advantages:
+
+* smaller files
+* excellent compatibility
+* more than adequate image quality for album covers
+
+PNG may be useful for specific artwork sources, but its larger file sizes rarely provide meaningful benefits for music libraries.
+
+Unless there is a specific reason to do otherwise, JPEG is generally recommended.
+
+A third format, WebP, is occasionally encountered as output from some artwork downloaders or online sources. While WebP offers good compression, its support in older players, car infotainment systems, and embedded devices is inconsistent. For maximum compatibility, converting WebP artwork to JPEG before adding it to the library is generally advisable.
+
+## Optimizing Large Images
+
+Sometimes artwork is perfectly good but unnecessarily large.
+
+In those cases, recompressing the image can significantly reduce file size without producing any visible loss of quality.
+
+On Ubuntu, ImageMagick provides a simple solution:
+
+Before optimizing artwork, it is worth keeping a copy of the original file, as recompression is a destructive operation.
+
+The safest approach is to create an optimized copy first and compare it against the original before replacing anything:
+
+```bash
+convert cover.jpg -strip -quality 85 cover_optimized.jpg
+```
+
+Once satisfied with the result, the original can be replaced manually.
+
+If you prefer to process files in place and are confident in the settings, `mogrify` overwrites the original directly:
+
+```bash
+mogrify -strip -quality 85 cover.jpg
+```
+
+> [!NOTE]
+>  A quality value of 85 is a reasonable starting point for album artwork. Values between 82 and 90 generally produce results that are visually indistinguishable from the original while significantly reducing file size. Values below 80 may introduce visible compression artifacts on artwork with fine gradients or sharp text.
+
+Windows users can achieve similar results directly from the Photos application by using the image resize function.
+
+## Auditing Existing Artwork
+
+As libraries grow, manually checking artwork becomes increasingly difficult.
+
+For large collections, simple scripts can help identify potential problems.
+
+For example:
+
+* artwork below a chosen minimum resolution
+* artwork above a chosen maximum file size
+
+For example, when I decided to review the artwork in my own library, I used a small Bash script to generate a checklist of albums whose `cover.jpg` and `cover.png` files were below my preferred minimum resolution of 1200×1200 pixels:
+
+```bash
+find ~/Navidrome -type f \( -iname "cover.jpg" -o -iname "cover.png" \) \
+  -exec identify -format "%[fx:w*h]|%w|%h|%i\n" {} \; \
+  | awk -F'|' '$2 < 1200 || $3 < 1200' \
+  | sort -n \
+  | awk -F'|' '{print "[ ] " $2 "x" $3 " -> " $4}' \
+  > ~/cover_checklist.txt
+```
+
+The resulting file contains entries such as:
+
+```text
+[ ] 529x523 -> /home/user/Navidrome/Tammy Wynette/1968 - Take Me to Your World _ I Don't Want to Play House/cover.jpg
+[ ] 600x600 -> /home/user/Navidrome/Cyndi Lauper/1983 - She's So Unusual/cover.jpg
+[ ] 800x800 -> /home/user/Navidrome/Randy Travis/1986 - Storms of Life/cover.jpg
+[ ] 900x900 -> /home/user/Navidrome/Chase Matthew/2024 - We All Grow Up/cover.jpg
+```
+
+A similar approach can be used to identify artwork files that exceed a chosen size threshold. For example, the following script lists all `cover.jpg` and `cover.png` files larger than 6 MB:
+
+```bash
+find ~/Navidrome -type f \( -iname "cover.jpg" -o -iname "cover.png" \) \
+  -size +6M \
+  | while read f; do
+      size=$(ls -lh "$f" | awk '{print $5}')
+      echo "[ ] $size -> $f"
+    done \
+  | sort -k2 \
+  > ~/cover_big.txt
+```
+
+Typical output might look like:
+
+```text
+[ ] 11M -> /home/user/Navidrome/Procol Harum/1967 - A Whiter Shade of Pale/cover.jpg
+[ ] 11M -> /home/user/Navidrome/T.G. Sheppard/1982 - Perfect Stranger/cover.jpg
+[ ] 11M -> /home/user/Navidrome/The Castellows/2024 - A Little Goes a Long Way/cover.jpg
+[ ] 12M -> /home/user/Navidrome/Kelsey Hart/2023 - Life With You/cover.jpg
+```
+
+These scripts are not requirements, merely practical examples. Even a simple checklist can make it much easier to gradually improve artwork quality across a large collection without having to inspect every album manually.
+
+> [!IMPORTANT]
+> Both scripts `mogrify` and `identify` on this page require ImageMagick. If it is not already installed, it can be added with:
+> ```bash
+> sudo apt install imagemagick
+> ```
+
+## Obtaining Artwork
+
+In most cases, MusicBrainz Picard will automatically download artwork during the tagging process.
+
+Because artwork is associated with specific MusicBrainz releases, different releases of the same album may provide different artwork quality.
+
+It is therefore not unusual to find that one release offers significantly better artwork than another.
+
+This is another reason why selecting the correct release in Picard matters.
+
+As discussed earlier in this guide, Picard can be configured to retrieve artwork from:
+
+* Cover Art Archive
+* Allowed Cover Art URLs
+* Local Files
+
+Additional artwork providers are also available through plugins.
+
+Popular examples include:
+
+* fanart.tv
+* TheAudioDB
+
+These sources often provide high-quality artwork for release groups and can complement the default providers.
+
+> [!NOTE]
+> Note that the fanart.tv plugin requires a free API key to function. The key can be obtained by registering on the fanart.tv website and must be entered in the plugin settings within Picard before use.
+
+## When Automatic Artwork Is Not Enough
+
+Automatic downloads are convenient, but they are not always perfect.
+
+Sometimes artwork is:
+
+* low resolution
+* incorrect
+* incomplete
+* missing entirely
+
+In these situations, a manual search is often the best solution.
+
+An excellent starting point is the MusicBrainz community guide:
+
+https://wiki.musicbrainz.org/User:Nikki/CAA
+
+It documents many different sources and techniques for locating high-quality album artwork.
+
+One particularly useful tool is:
+
+https://bendodson.com/projects/apple-music-artwork-finder/
+
+Simply search for an album or paste an Apple Music URL to retrieve artwork in multiple resolutions, including high-quality versions suitable for long-term library use.
+
+## Previewing and Replacing Artwork in Picard
+
+Picard makes it easy to inspect artwork before saving files.
+
+In the lower-right section of the interface, click:
+
+```text
+Show more details
+```
+
+Picard will display both the artwork currently associated with the file and the artwork that will be written when saving.
+
+![Artwork preview in Picard](images/13-artwork-preview-picard.png)
+
+If you wish to replace the proposed artwork with a local image:
+
+1. right-click the artwork preview.
+2. select **Choose local file...**
+3. select the desired image.
+
+Picard will use the selected artwork when saving the files.
+
+![Selecting local artwork in Picard](images/14-selecting-local-artwork-picard.png)
+
+> [!TIP]
+> Do not obsess over finding the perfect cover art. A consistent collection with good-quality artwork is far more valuable than spending hours searching for marginal improvements.
+
+# Chapter 6 – Lyrics
+
+Lyrics are often overlooked when building a music library.
+
+Yet, when properly managed, they can dramatically improve the listening experience and bring a self-hosted music collection surprisingly close to the experience offered by commercial streaming services.
+
+Modern music players and music servers can display lyrics while listening, search within them, and in many cases synchronize them with the currently playing track.
+
+Like cover art and ReplayGain, lyrics require a little attention initially but can become almost completely automated once a workflow is established.
+
+## Embedded Lyrics vs External Files
+
+Lyrics can be stored in two different ways.
+
+### Embedded Lyrics
+
+In this approach, the lyrics are written directly into the audio file's metadata.
+
+Advantages:
+
+* everything remains inside a single file.
+* lyrics travel with the audio file.
+* no additional files are required.
+
+Disadvantages:
+
+* updating lyrics requires modifying the audio file.
+* some applications provide limited support for embedded lyrics.
+* inspecting and editing lyrics manually can be less convenient.
+
+> [!NOTE]
+> For FLAC files, lyrics are typically stored in the `LYRICS` tag for unsynchronized text and `SYNCEDLYRICS` for synchronized content. Support for these tags varies across applications: not all players that display external `.lrc` files also support embedded synchronized lyrics. This is one practical reason why external files tend to offer better interoperability.
+
+### External Lyrics Files
+
+The alternative is to store lyrics as separate files alongside the music.
+
+For example:
+
+```text
+01 - Track.flac
+01 - Track.lrc
+```
+
+or
+
+```text
+01 - Track.flac
+01 - Track.txt
+```
+
+This guide uses external files because they are easy to inspect, replace, edit, back up, and synchronize across applications.
+
+## LRC vs TXT
+
+Not all lyric files are the same.
+
+### TXT Files
+
+A `.txt` file contains plain text.
+
+The lyrics can be displayed, but they have no timing information.
+
+The player simply shows the text without following the music.
+
+### LRC Files
+
+A `.lrc` file contains timestamps associated with each line.
+
+Example:
+
+```text
+[00:12.50] Hello darkness, my old friend
+[00:17.80] I've come to talk with you again
+```
+
+Because each line contains timing information, compatible players can highlight lyrics as the song progresses.
+
+This creates the familiar "karaoke-style" experience found in many streaming services.
+
+For this reason, synchronized `.lrc` lyrics are generally preferred whenever available.
+
+> [!NOTE]
+> The LRC format also supports extended metadata headers (artist, title, album) and an enhanced variant that includes per-word timestamps for word-by-word highlighting. In practice, the standard line-by-line format is the most widely supported and is what most automated tools produce.
+
+## How Lyrics Are Retrieved
+
+Many modern applications can retrieve lyrics automatically.
+
+For example:
+
+* Jellyfin can periodically scan the library and download lyrics automatically
+* some desktop players can fetch lyrics during playback
+* several mobile clients provide similar functionality
+
+This may already be sufficient for some users.
+
+However, relying entirely on client-side retrieval means that lyrics may not be available consistently across all devices and applications.
+
+A more reliable approach is to store the lyrics directly alongside the music files.
+
+Picard also supports lyrics retrieval through third-party plugins. However, because lyrics often require more curation than metadata (particularly for synchronized content) a dedicated tool such as LRCGET tends to produce more consistent results and is generally the better choice for a library-wide workflow.
+
+## Using LRCGET
+
+One of the simplest tools for managing lyrics in a self-hosted music library is:
+
+https://github.com/tranxuanthang/lrcget
+
+LRCGET scans a music library, identifies tracks, searches for matching lyrics, and saves them alongside the corresponding audio files.
+
+The process is largely automatic.
+
+After selecting the root directory of the music library, it is usually sufficient to start a full scan and wait for completion.
+
+Lyrics are retrieved from LRCLIB and saved using the same filename as the audio track.
+
+For example:
+
+```text
+01 - Track.flac
+01 - Track.lrc
+```
+
+This makes the files immediately usable by any compatible application.
+
+![LRCGET main interface](images/15-lrcget-main-interface.png)
+
+> [!NOTE]
+> LRCLIB is a community-maintained, open lyrics database. Unlike many commercial lyrics providers, its content is available under open licenses, making it a particularly suitable source for a self-hosted library built around long-term independence.
+
+## Saving Lyrics as Tags
+
+Although this guide prefers separate lyric files, LRCGET can also write lyrics directly into audio tags.
+
+Users who prefer a fully self-contained file structure can simply enable the corresponding option in the application settings.
+
+Both approaches are valid.
+
+The choice largely depends on personal preference and the applications being used.
+
+## When Automatic Retrieval Fails
+
+No lyrics database is perfect.
+
+Occasionally, a track may have:
+
+* no synchronized lyrics
+* no lyrics at all
+* incorrect timing
+* incomplete lyrics
+
+Before creating lyrics manually, it is often worth checking LRCLIB directly.
+
+In many cases, the lyrics already exist but were indexed under slightly different metadata. Common causes include:
+
+* special characters in album or artist names
+* alternative spellings or aliases for the same artist
+* tracks appearing on multiple releases with identical duration
+* minor metadata differences that prevent automatic matching
+
+A quick manual search on LRCLIB can sometimes locate lyrics that automated tools failed to find.
+
+If no suitable lyrics are available, LRCGET also provides tools for manual synchronization.
+
+The process is straightforward:
+
+1. obtain the song lyrics
+2. start playback
+3. mark each line as it is sung
+4. save the resulting `.lrc` file
+
+The first attempts may feel slightly awkward, but the workflow quickly becomes natural.
+
+![LRCGET sync lyrics](images/16-lrcget-sync-lyrics.png)
+
+> [!TIP]
+> Many users also find that applying a small timing adjustment after synchronization improves the result.
+> For example, shifting all timestamps backwards by a few tenths of a second can often produce a more natural reading experience.
+> The exact value depends on personal preference, reaction time, and listening habits.
+
+> [!NOTE]
+> If you create synchronized lyrics yourself, consider submitting them back to LRCLIB.
+> Contributing your work helps improve the database for everyone and increases the chances that other users will find synchronized lyrics automatically in the future.
+
+## Supported Applications
+
+One reason `.lrc` files have become so popular is their broad support across the music ecosystem.
+
+Many modern applications can display synchronized lyrics stored in external `.lrc` files.
+
+Examples include:
+
+* Navidrome clients such as Feishin
+* Jellyfin clients
+* Foobar2000
+* MusicBee
+* numerous Android and iOS music applications
+
+Because `.lrc` has effectively become the common format understood by many different applications, maintaining lyrics as separate files provides excellent interoperability.
+
+Support for synchronized lyrics in mobile clients varies. Among the more popular Navidrome-compatible mobile applications, Symfonium offers particularly good LRC support. It is worth verifying lyrics display behaviour in whichever client you use most frequently before committing to a library-wide lyrics workflow.
+
+## Building Your Library Over Time
+
+Lyrics management does not need to be perfect from the beginning.
+
+Just as with cover art, consistency matters more than completeness.
+
+Some albums may initially contain synchronized lyrics.
+
+Others may only contain plain text.
+
+Some tracks may have no lyrics at all.
+
+That is perfectly normal.
+
+The important thing is to establish a workflow that allows improvements over time.
+
+A library containing thousands of tracks can gradually accumulate lyrics through automatic downloads, occasional manual corrections, and normal day-to-day listening.
+
+Over the years, those small improvements add up.
+
+The result is a music collection that feels increasingly complete, personal, and independent of any particular streaming platform.
