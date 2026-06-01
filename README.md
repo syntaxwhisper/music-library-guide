@@ -223,16 +223,20 @@ Edit file naming script...
 and use the following naming script:
 
 ```text
-%artist%/$if(%originalyear%,%originalyear%,$left(%date%,4)) - %album%/$num(%tracknumber%,2) - %title%
+$if(%albumartist%,%albumartist%,%artist%)/$if(%originalyear%,%originalyear%,$left(%date%,4)) - %album%/$num(%tracknumber%,2) - %title%
 ```
 
-This script automatically creates artist folders, album folders prefixed with the release year, and consistently numbered track names.
+![File Naming Script Editor for single disk settings](images/05-file-naming-script-editor-single-disk.png)
 
-The `$if` condition handles an important edge case: the `%originalyear%` field is not always populated in MusicBrainz, particularly for less well-documented releases. When it is missing, the script falls back to the first four characters of the `%date%` field, which is populated far more consistently. Without this fallback, albums with no original year would generate folder names beginning with a dash, which produces an invalid or unexpected directory structure on most systems.
+This script contains three layers of logic, each handling a potential inconsistency in the source metadata.
 
-Before saving an album, it is worth verifying in Picard that at least one of these two fields is present. If both are empty, the folder name will begin with  ` - Album Title`, which is visually awkward and may cause sorting issues in some applications. In that case, the date can be entered manually in Picard before saving.
+**Root folder**: album artist with fallback to track artist. The script uses `%albumartist%` rather than `%artist%` as the root folder. This ensures that albums featuring collaborations or guest artists (where the track-level `%artist%` field may differ from track to track) are always grouped under a single consistent directory. If `%albumartist%` is not populated, the script falls back to `%artist%`.
 
-![File Naming Script Editor settings](images/05-file-naming-script-editor.png)
+**Album folder**: original year with fallback to release date. The album folder is prefixed with `%originalyear%`, which records when a work was first published rather than when a specific edition was released. This keeps reissues, remasters, and anniversary editions sorted by the date that matters most for browsing. Because this field is not always present in MusicBrainz (particularly for less well-documented releases) the script falls back to the first four characters of `%date%`, which is populated far more consistently. Without this fallback, albums missing both fields would generate folder names beginning with a bare dash.
+
+**Track filename**: zero-padded track number followed by title. `$num(%tracknumber%,2)` pads the track number to two digits, ensuring that files sort correctly in any file manager or application that uses alphabetical ordering.
+
+Before saving an album, it is worth confirming in Picard that at least one date field is present. If both `%originalyear%` and `%date%` are empty, the album folder will be named ` - Album Title`, which is visually awkward and may cause sorting issues. In that case, the date can be entered manually before saving.
 
 Users interested in advanced naming rules can consult the official Picard scripting documentation:
 
@@ -246,8 +250,10 @@ Without disc handling, a double album would place all tracks in a single folder.
 To handle multi-disc releases correctly, use the following script instead:
 
 ```text
-%artist%/$if(%originalyear%,%originalyear%,$left(%date%,4)) - %album%/$if($gt(%totaldiscs%,1),Disc $num(%discnumber%,1)/)$num(%tracknumber%,2) - %title%
+$if(%albumartist%,%albumartist%,%artist%)/$if(%originalyear%,%originalyear%,$left(%date%,4)) - %album%/$if($gt(%totaldiscs%,1),Disc $num(%discnumber%,1)/)$num(%tracknumber%,2) - %title%
 ```
+
+![File Naming Script Editor for multi disks settings](images/05-file-naming-script-editor-multi-disks.png)
 
 The `$if($gt(%totaldiscs%,1),...)` condition checks whether the release contains more than one disc. If it does, a `Disc N` subfolder is inserted automatically. If it does not, the folder structure remains identical to the single-disc version.
 
@@ -282,8 +288,10 @@ This behaviour is predictable and works well in most cases. All compilations end
 If you prefer to keep compilations entirely separate from artist folders (for example, in a dedicated `Compilations` directory at the root of the library) this can be achieved by modifying the script with a conditional check on the compilation flag:
 
 ```text
-$if(%compilation%,Compilations,%artist%)/$if(%originalyear%,%originalyear%,$left(%date%,4)) - %album%/$if($gt(%totaldiscs%,1),Disc $num(%discnumber%,1)/)$num(%tracknumber%,2) - %title%
+$if(%compilation%,Compilations,$if(%albumartist%,%albumartist%,%artist%))/$if(%originalyear%,%originalyear%,$left(%date%,4)) - %album%/$if($gt(%totaldiscs%,1),Disc $num(%discnumber%,1)/)$num(%tracknumber%,2) - %title%
 ```
+
+![File Naming Script Editor for compilations settings](images/05-file-naming-script-editor-compilations.png)
 
 The `$if(%compilation%,...)` condition checks whether the compilation flag is set. If it is, the file goes into a `Compilations` folder instead of the artist folder.
 
