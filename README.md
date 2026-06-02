@@ -16,6 +16,9 @@ A practical guide to building, organizing, tagging, backing up, and preserving a
 - [Chapter 4 – ReplayGain](#chapter-4--replaygain)
 - [Chapter 5 – Cover Art](#chapter-5--cover-art)
 - [Chapter 6 – Lyrics](#chapter-6--lyrics)
+- [Chapter 7 – Listening to Your Library](#chapter-7--listening-to-your-library)
+- [Chapter 8 – Backups](#chapter-7--backups)
+- [Final Chapter – A Repeatable Workflow](#final-chapter--a-repeatable-workflow)
 
 # Introduction
 
@@ -32,9 +35,6 @@ This guide does **not** explain how to obtain music. It assumes that you already
 The goal is simple: transform a folder full of audio files into a collection that is properly tagged, easy to navigate, compatible with modern music servers and players, and resilient enough to remain organized for years.
 
 The workflow described here is based on widely adopted tools and standards, with a particular focus on [MusicBrainz Picard](https://picard.musicbrainz.org/), [ReplayGain](https://wiki.hydrogenaudio.org/index.php?title=ReplayGain), [Navidrome](https://www.navidrome.org/), and self-hosted music management. However, most of the concepts apply equally well regardless of the software you choose.
-
-> [!NOTE]
-> This guide is actively maintained. Chapters on backup strategies and archival practices are in preparation and will be added in subsequent revisions.
 
 Before discussing software, folder structures, or streaming servers, it is important to understand a fundamental concept:
 
@@ -1368,3 +1368,400 @@ The important thing is to establish a workflow that allows improvements over tim
 A library containing thousands of tracks can gradually accumulate lyrics through automatic downloads, occasional manual corrections, and normal day-to-day listening.
 
 Over the years, those small improvements add up.
+
+# Chapter 7 – Listening to Your Library
+
+At this point, the library exists.
+
+The files are organized.
+
+The metadata is consistent.
+
+Artwork is in place.
+
+ReplayGain has been calculated.
+
+Lyrics are available.
+
+Now comes the reason for all of it: listening to the music.
+
+Fortunately, there is no single correct way to access a music collection.
+
+The best solution depends entirely on how and where you want to listen.
+
+## Two Different Approaches
+
+Most users eventually choose one of two paths.
+
+### Local Playback
+
+The simplest option is to keep the music directly on the device used for listening and access it with a local player. No additional infrastructure is required.
+
+In this model, the music files remain local and are accessed directly by the music player.
+
+This approach is simple, reliable, and requires no additional infrastructure.
+
+For many users, it is all they will ever need.
+
+### Self-Hosted Streaming
+
+The alternative is to store the music library on a dedicated system and stream it to multiple devices.
+
+The server becomes the central location for the collection, while phones, tablets, laptops, and desktop computers connect to it as clients.
+
+This approach keeps a single centralized library on one machine, accessible from phones, tablets, laptops, and desktops without ever copying files manually. It also makes long-term maintenance simpler: metadata corrections, artwork updates, and ReplayGain recalculations happen once, and every device immediately reflects the change.
+
+Contrary to what many people assume, this does not require powerful hardware.
+
+Even small and inexpensive systems can easily host a personal music library.
+
+A Raspberry Pi, a small mini-PC, a NAS, or an existing home server are often more than sufficient.
+
+## Understanding Servers and Clients
+
+When discussing self-hosted music, it is useful to distinguish between two different components.
+
+### The Server
+
+The server stores the music library and makes it available to other devices.
+
+Popular solutions include:
+
+* Navidrome
+* Jellyfin
+
+The server manages:
+
+* music indexing
+* metadata
+* artwork
+* ReplayGain information
+* lyrics
+* search functionality
+
+The server does not necessarily play music itself, although many modern music servers also provide their own built-in playback interfaces.
+
+For example, both Jellyfin and Navidrome can be accessed directly through a web browser, allowing users to browse and play their music without installing additional software. Jellyfin also provides official applications for several platforms.
+
+However, many users prefer dedicated third-party clients because they often offer features, interfaces, or workflows better suited to music listening. One of the strengths of self-hosted music ecosystems is precisely this flexibility: you can use the built-in web interface, official applications where available, or third-party clients depending on your preferences.
+
+### The Client
+
+The client is the application actually used for listening.
+
+It connects to the server and presents the music collection through a user interface.
+
+Clients exist for:
+
+* Windows
+* macOS
+* Linux
+* Android
+* iPhone and iPad
+* Web browsers
+
+Most users will interact with clients far more often than with the server itself.
+
+## Choosing a Client
+
+One of the most common questions is:
+
+> "What is the best music player?"
+
+There is no universally correct answer. What makes a player feel right is largely personal, and a client that works perfectly for one listener may feel completely wrong to another.
+
+Experimentation is part of the process. The good news is that modern music servers support a wide variety of clients, making it easy to try different options without touching the underlying library.
+
+For readers interested in exploring available clients, both Navidrome and Jellyfin maintain curated lists of compatible applications:
+
+* Navidrome: https://www.navidrome.org/apps/
+* Jellyfin: https://jellyfin.org/downloads/clients
+
+## Local Network or Remote Access
+
+A self-hosted music server can be used in different ways.
+
+### Local Network Only
+
+The simplest configuration is to make the library available only within the home network.
+
+In this scenario:
+
+* devices connected to the local network can access the music.
+* devices outside the home cannot.
+
+This setup is easy to manage and suitable for many users.
+
+### Remote Access
+
+Some users prefer to access their music library from anywhere.
+
+This allows listening while:
+
+* travelling
+* commuting
+* working away from home
+* using mobile data connections
+
+There are many ways to achieve this.
+
+Each has different trade-offs involving security, complexity, convenience, and maintenance.
+
+Because those topics deserve a guide of their own, they are outside the scope of this document.
+
+The important point is simply that both options exist.
+
+## The Library Matters More Than the Player
+
+One of the recurring themes throughout this guide is that good organization creates freedom.
+
+A well-maintained music library is not tied to a specific application.
+
+You can change:
+
+* players
+* phones
+* operating systems
+* servers
+* streaming clients
+
+without having to rebuild the collection.
+
+That is the real value of proper metadata, consistent artwork, ReplayGain, and structured organization.
+
+Applications come and go. A well-maintained library outlasts all of them.
+
+# Chapter 8 – Backups
+
+Building a music library takes time.
+
+Sometimes a lot of time.
+
+The audio files themselves are only part of the investment.
+
+Over the years, many collectors also spend countless hours:
+
+* correcting metadata
+* choosing the right release
+* finding better artwork
+* calculating ReplayGain
+* downloading lyrics
+* creating synchronized lyrics manually
+* organizing and maintaining the collection
+
+Losing the library means losing all of that work.
+
+The question is not whether backups are important.
+
+The real question is how much risk you are willing to accept.
+
+Some users are perfectly comfortable keeping a single copy of their music and rebuilding the library if necessary.
+
+Others consider the time invested in maintaining the collection too valuable to lose.
+
+Neither approach is inherently right or wrong.
+
+The important thing is making a conscious decision rather than relying on luck.
+
+## The 3-2-1 Rule
+
+One of the most widely recommended backup strategies is the 3-2-1 rule.
+
+The idea is simple:
+
+* keep at least three copies of your data
+* store the copies on at least two different types of media
+* keep at least one copy in a different physical location
+
+For a music library, this might look like:
+
+| Copy            | Location                          |
+| --------------- | --------------------------------- |
+| Primary copy    | Music server or main computer     |
+| Local backup    | External hard drive               |
+| Off-site backup | Cloud storage or another location |
+
+This is only an example.
+
+The exact implementation is less important than understanding the principle behind it.
+
+The goal is to avoid a single point of failure.
+
+> [!NOTE]
+> The 3-2-1 rule has evolved over time as storage has become cheaper and ransomware more common. A refinement sometimes called the 3-2-1-1-0 rule adds two further requirements: keeping one copy completely offline or air-gapped, and verifying that all backups contain zero errors. For a personal music library, the original 3-2-1 formulation is more than sufficient for most users. The extended version is worth knowing about if the collection represents years of irreplaceable curation work.
+
+## Start Small
+
+The 3-2-1 rule is an excellent objective, but perfection should not become an obstacle.
+
+For many users, simply maintaining one additional copy of the music library on a separate drive already provides significant protection.
+
+An old mechanical hard drive that would otherwise remain unused is often more than sufficient.
+
+> [!NOTE]
+> Before using an old drive as a backup target, verify that it is still in good condition. On Linux, `smartmontools` provides the standard tool for this; on Windows, `CrystalDiskInfo` offers a graphical alternative.
+>
+> To install and run `smartmontools` on Ubuntu:
+> ```bash
+> sudo apt install smartmontools
+> sudo smartctl -a /dev/sdX
+> ```
+> Replace `/dev/sdX` with the correct device identifier for the drive. The most important line in the output is:
+> ```
+> SMART overall-health self-assessment test result: PASSED
+> ```
+> Any result other than `PASSED` is a strong signal that the drive should not be trusted as a backup target.
+
+Whether the drive is:
+
+* installed internally
+* connected through SATA
+* placed inside a USB enclosure
+
+it can serve as a dedicated backup target.
+
+Even a basic backup strategy is dramatically better than no backup at all.
+
+## Modern Backup Software
+
+Modern backup tools make the process surprisingly simple.
+
+Most can:
+
+* deduplicate data
+* compress backups
+* maintain multiple versions
+* verify integrity
+* restore individual files
+* restore entire directories
+
+Popular examples include:
+
+* Borg
+* Restic
+* Kopia
+
+For users new to backup software, Restic is a reasonable starting point. It is well-documented, actively maintained, supports a wide range of destinations (including local drives, network shares, and cloud storage) and has a straightforward command-line interface. Borg and Kopia are equally capable alternatives: Borg is particularly well-regarded for its deduplication efficiency on large collections, while Kopia offers a graphical interface that some users may find more approachable.
+
+Each tool has its own philosophy and workflow, but all share the same goal: preserving your data while minimizing storage requirements.
+
+The specific software you choose is far less important than consistently using it.
+
+If you are new to backups and unsure where to start, Reddit can be surprisingly helpful. The r/Backup community maintains a comprehensive wiki that covers backup strategies, software options, and common questions:
+
+https://www.reddit.com/r/Backup/wiki/index/
+
+It is not necessary reading, but it can be a useful resource when evaluating different approaches and deciding what best fits your needs.
+
+## Why Versioned Backups Matter
+
+A backup is not only protection against disk failure.
+
+It also protects against human error.
+
+Consider a few common situations:
+
+* an album is accidentally deleted
+* artwork is replaced incorrectly
+* metadata is damaged during bulk editing
+* a directory is removed unintentionally
+
+Without versioned backups, recovering from these mistakes can be difficult or impossible.
+
+With versioned backups, recovery is often trivial.
+
+Simply restore the previous version.
+
+This is one of the reasons modern backup software is so valuable.
+
+Backups become more than copies.
+
+They become snapshots of the library at different points in time.
+
+## Backup the Entire Library
+
+When planning backups, think beyond the audio files themselves.
+
+A complete music library often includes:
+
+* audio files
+* artwork
+* lyrics
+* playlists
+* configuration files
+* server databases
+
+> [!NOTE]
+> Playlist management is outside the scope of this guide. If you maintain playlists (whether as `.m3u` files on disk or within your music server's internal database) they are worth including in the backup alongside everything else. The specific location depends on the software you use: Navidrome stores its database in a configurable data directory, while other servers may keep playlist files directly in the music library folder.
+
+Depending on your setup, preserving server configuration and application data can significantly reduce recovery time after a hardware failure.
+
+The more complete the backup, the easier the recovery.
+
+## Automation Helps
+
+The best backup is usually the one that happens automatically.
+
+Whether backups run:
+
+* daily
+* weekly
+* monthly
+
+is less important than maintaining a consistent schedule.
+
+Many users start with manual backups and later move to automated solutions.
+
+Both approaches are valid.
+
+The critical point is that backups should become part of the normal lifecycle of the library.
+
+> [!TIP]
+> On Linux, a cron job is one of the simplest ways to schedule a backup automatically. To open the crontab editor for the current user:
+> ```bash
+> crontab -e
+> ```
+> A weekly backup running every Sunday at 3:30 AM looks like this:
+> ```
+> 30 3 * * ' /home/user/scripts/backup-music.sh
+> ```
+> The script itself can contain as little as a single backup command: a `restic backup` or `borg create` invocation with the appropriate source and destination. The scheduling mechanism is the same regardless of which backup tool you choose.
+> If you prefer a more modern approach, systemd timers offer finer control and better logging integration, though they require slightly more configuration. Either method is equally valid for a personal library.
+
+## Backups Protect Time
+
+Storage can be replaced.
+
+Time cannot.
+
+A failed hard drive can be purchased again.
+
+The hours spent tagging music, selecting artwork, creating playlists, synchronizing lyrics, and maintaining metadata are much harder to recover.
+
+A backup protects those hours.
+
+That alone makes it worthwhile.
+
+# Final Chapter – A Repeatable Workflow
+
+This concluding chapter brings together everything covered so far into a single repeatable sequence that can be applied to every new addition to the library.
+
+At first glance, the process may seem complex. In practice, it quickly becomes routine:
+
+1. add new audio files to the incoming directory
+2. verify that the files are complete and in good condition
+3. load the album into MusicBrainz Picard
+4. match it to the correct release
+5. review and correct metadata if necessary
+6. verify that all tracks are present and complete
+7. verify the artwork
+8. calculate ReplayGain
+9. save the files into the library
+10. download lyrics
+11. let the next backup run
+
+The same sequence works whether the library contains one hundred albums or ten thousand.
+
+Over time, metadata becomes more consistent, artwork improves, lyrics accumulate, and backups provide peace of mind. Most importantly, the library remains independent of any streaming service, any particular player, and any single operating system.
+
+The tools used today may change. The collection does not have to.
