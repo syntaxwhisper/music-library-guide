@@ -1723,7 +1723,7 @@ The critical point is that backups should become part of the normal lifecycle of
 > ```
 > A weekly backup running every Sunday at 3:30 AM looks like this:
 > ```
-> 30 3 * * ' /home/user/scripts/backup-music.sh
+> 30 3 * * 0 /home/user/scripts/backup-music.sh
 > ```
 > The script itself can contain as little as a single backup command: a `restic backup` or `borg create` invocation with the appropriate source and destination. The scheduling mechanism is the same regardless of which backup tool you choose.
 > If you prefer a more modern approach, systemd timers offer finer control and better logging integration, though they require slightly more configuration. Either method is equally valid for a personal library.
