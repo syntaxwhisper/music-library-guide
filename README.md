@@ -17,7 +17,7 @@ A practical guide to building, organizing, tagging, backing up, and preserving a
 - [Chapter 5 – Cover Art](#chapter-5--cover-art)
 - [Chapter 6 – Lyrics](#chapter-6--lyrics)
 - [Chapter 7 – Listening to Your Library](#chapter-7--listening-to-your-library)
-- [Chapter 8 – Backups](#chapter-7--backups)
+- [Chapter 8 – Backups](#chapter-8--backups)
 - [Final Chapter – A Repeatable Workflow](#final-chapter--a-repeatable-workflow)
 
 # Introduction
@@ -36,9 +36,10 @@ The goal is simple: transform a folder full of audio files into a collection tha
 
 The workflow described here is based on widely adopted tools and standards, with a particular focus on [MusicBrainz Picard](https://picard.musicbrainz.org/), [ReplayGain](https://wiki.hydrogenaudio.org/index.php?title=ReplayGain), [Navidrome](https://www.navidrome.org/), and self-hosted music management. However, most of the concepts apply equally well regardless of the software you choose.
 
-Before discussing software, folder structures, or streaming servers, it is important to understand a fundamental concept:
+Before discussing software, folder structures, or streaming servers, it helps to understand one fundamental concept: a music library is built on metadata.
 
-a music library is built on metadata.
+> [!WARNING]
+> Several steps in this guide (particularly MusicBrainz Picard's file-moving feature) will relocate or rename your audio files. Before starting, make sure you have a backup copy of your music in a safe location.
 
 # Chapter 1 – The Philosophy: Metadata First
 
@@ -124,9 +125,9 @@ This produces cleaner and more predictable results than allowing multiple overla
 
 The exact values are ultimately a matter of personal preference, but maintaining consistency across the entire collection is more important than choosing any particular genre strategy.
 
-One limitation of this configuration is worth noting. Setting the minimum genre usage threshold to 90% means that Picard will only assign a genre if that genre has very strong consensus in the MusicBrainz database for that specific release. For well-documented releases this works well, but for less common recordings (live albums, regional releases, obscure artists) the threshold may be too high, and some albums may end up with no genre at all.
-
-If you notice that a significant portion of your library remains untagged after processing, lowering the threshold to 70% or 80% will produce more genre assignments while still filtering out low-confidence tags. Alternatively, genres can always be assigned manually in Picard for individual releases.
+> [!NOTE]
+> One limitation of this configuration is worth noting. Setting the minimum genre usage threshold to 90% means that Picard will only assign a genre if that genre has very strong consensus in the MusicBrainz database for that specific release. For well-documented releases this works well, but for less common recordings (live albums, regional releases, obscure artists) the threshold may be too high, and some albums may end up with no genre at all.
+> If you notice that a significant portion of your library remains untagged after processing, lowering the threshold to 70% or 80% will produce more genre assignments while still filtering out low-confidence tags. Alternatively, genres can always be assigned manually in Picard for individual releases.
 
 ## Cover Art Settings
 
@@ -546,11 +547,14 @@ Dates are often overlooked but provide valuable context.
 
 This guide recommends preserving:
 
-* Original release year
+* Original release date
 * Release year
 * Full release date when available
 
 These fields become particularly useful when working with reissues, remasters, anniversary editions, and deluxe releases.
+
+> [!NOTE]
+> In Picard's naming scripts and in FLAC tags, these correspond to `originalyear`, `releasedate`, and `date`.
 
 ### Genre
 
@@ -618,14 +622,6 @@ This makes ReplayGain completely reversible and safe to use.
 
 If you remove the ReplayGain tags, the audio files return to behaving exactly as they did before.
 
-## What ReplayGain Does Not Do
-
-ReplayGain is often misunderstood.
-
-It does not re-encode audio, modify waveforms, or permanently alter volume levels. It stores playback instructions, nothing more.
-
-Because of this, it can safely be applied multiple times without any effect on audio quality, and the tags can be removed at any time to restore the original behaviour.
-
 ## ReplayGain vs Destructive Normalization
 
 Many audio editors offer some form of "normalization".
@@ -652,8 +648,6 @@ With ReplayGain:
 * the operation is fully reversible
 * files can be rescanned at any time
 * different loudness targets can be tested later
-
-It is worth clarifying that this limitation applies specifically to lossy audio formats. If your library consists entirely of lossless files such as FLAC or ALAC, re-normalizing the audio does not introduce perceptible quality degradation, because no lossy compression step is involved. For lossless formats, the practical risk of repeated destructive normalization is much lower, but the advantage of ReplayGain remains the same: the audio is never touched at all.
 
 For a long-term music library, ReplayGain is generally the preferred approach.
 
@@ -909,7 +903,7 @@ One setting in the preset deserves particular attention: `OpusMode=d`.
 
 In rsgain, `OpusMode=d` uses the default behaviour for Opus files, which writes R128 tags (`R128_TRACK_GAIN` and `R128_ALBUM_GAIN`) rather than standard ReplayGain tags. This is consistent with the Opus specification, which defines its own gain mechanism distinct from the ReplayGain standard.
 
-The ReplayGain plugin in Picard uses the equivalent setting when configured with "Write standard ReplayGain tags" for Opus filesm, but it is worth verifying that both tools are aligned if your library contains Opus files, as inconsistencies between the two can produce unexpected playback behaviour in some players.
+The ReplayGain plugin in Picard uses the equivalent setting when configured with "Write standard ReplayGain tags" for Opus files, but it is worth verifying that both tools are aligned if your library contains Opus files, as inconsistencies between the two can produce unexpected playback behaviour in some players.
 
 If your library consists entirely of FLAC files, this setting has no practical effect and can be ignored.
 
@@ -933,12 +927,6 @@ For readers interested in the technical details, the following resources are hig
   https://github.com/complexlogic/rsgain#design-philosophy
 
 Understanding every technical detail is not necessary to benefit from ReplayGain.
-
-The most important concept is simple:
-
-ReplayGain does not change your music.
-
-It changes how compatible players choose to play it.
 
 # Chapter 5 – Cover Art
 
@@ -970,14 +958,6 @@ Embedding artwork ensures that tracks remain self-contained and portable.
 Keeping a separate `cover.jpg` file improves compatibility with many music servers, players, and library management tools.
 
 If one method fails, the other is usually still available.
-
-There is no single correct way to manage album artwork.
-
-This guide uses a dual approach: artwork embedded directly in the audio files, and a separate `cover.jpg` file in each album directory.
-
-This is not the only valid approach, but it works well across virtually every player, server, and device you are likely to encounter.
-
-Embedding artwork ensures that tracks remain self-contained. If a file is moved, copied, or shared individually, the artwork travels with it. The separate `cover.jpg` serves as a fallback for music servers, players, and library tools that prefer external files. If one method fails, the other is usually still available.
 
 ## Choosing the Right Artwork
 
@@ -1069,7 +1049,7 @@ For example:
 * artwork below a chosen minimum resolution
 * artwork above a chosen maximum file size
 
-For example, when I decided to review the artwork in my own library, I used a small Bash script to generate a checklist of albums whose `cover.jpg` and `cover.png` files were below my preferred minimum resolution of 1200×1200 pixels:
+For example, the following script generates a checklist of albums whose cover files fall below 1200×1200 pixels:
 
 ```bash
 find ~/Navidrome -type f \( -iname "cover.jpg" -o -iname "cover.png" \) \
@@ -1477,39 +1457,15 @@ For readers interested in exploring available clients, both Navidrome and Jellyf
 * Navidrome: https://www.navidrome.org/apps/
 * Jellyfin: https://jellyfin.org/downloads/clients
 
+Among desktop clients, [Feishin](https://github.com/jeffvli/feishin) works well with Navidrome and supports ReplayGain and synchronized lyrics out of the box. On Android, [Symfonium](https://symfonium.app/) offers strong LRC support and good ReplayGain integration.
+
 ## Local Network or Remote Access
 
 A self-hosted music server can be used in different ways.
 
-### Local Network Only
-
 The simplest configuration is to make the library available only within the home network.
 
-In this scenario:
-
-* devices connected to the local network can access the music.
-* devices outside the home cannot.
-
-This setup is easy to manage and suitable for many users.
-
-### Remote Access
-
-Some users prefer to access their music library from anywhere.
-
-This allows listening while:
-
-* travelling
-* commuting
-* working away from home
-* using mobile data connections
-
-There are many ways to achieve this.
-
-Each has different trade-offs involving security, complexity, convenience, and maintenance.
-
-Because those topics deserve a guide of their own, they are outside the scope of this document.
-
-The important point is simply that both options exist.
+A self-hosted server can also be accessed outside the home network. This involves additional configuration outside the scope of this guide; the Navidrome and Jellyfin documentation are the right starting points.
 
 ## The Library Matters More Than the Player
 
@@ -1647,7 +1603,7 @@ Each tool has its own philosophy and workflow, but all share the same goal: pres
 
 The specific software you choose is far less important than consistently using it.
 
-If you are new to backups and unsure where to start, Reddit can be surprisingly helpful. The r/Backup community maintains a comprehensive wiki that covers backup strategies, software options, and common questions:
+The r/Backup subreddit maintains a wiki covering common backup strategies and software comparisons, which may be useful when evaluating options:
 
 https://www.reddit.com/r/Backup/wiki/index/
 
@@ -1730,17 +1686,7 @@ The critical point is that backups should become part of the normal lifecycle of
 
 ## Backups Protect Time
 
-Storage can be replaced.
-
-Time cannot.
-
-A failed hard drive can be purchased again.
-
-The hours spent tagging music, selecting artwork, creating playlists, synchronizing lyrics, and maintaining metadata are much harder to recover.
-
-A backup protects those hours.
-
-That alone makes it worthwhile.
+Storage can be replaced. The hours spent tagging, finding artwork, and maintaining the library cannot. A backup protects that work.
 
 # Final Chapter – A Repeatable Workflow
 
@@ -1749,7 +1695,7 @@ This concluding chapter brings together everything covered so far into a single 
 At first glance, the process may seem complex. In practice, it quickly becomes routine:
 
 1. add new audio files to the incoming directory
-2. verify that the files are complete and in good condition
+2. verify that all tracks are present and that the files open correctly in a media player
 3. load the album into MusicBrainz Picard
 4. match it to the correct release
 5. review and correct metadata if necessary
